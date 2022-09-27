@@ -16,6 +16,14 @@ var searchInputEl = document.querySelector('#search');
 var resultsContainerEl = document.querySelector('#results-container');
 var repoSearchTerm = document.querySelector('#repo-search-term');
 
+var searchHistory = [];
+
+var city = {
+
+    name: "",
+    lat: 0,
+    lon: 0
+};
 
 // get user input from search field when search button is pressed
 
@@ -26,6 +34,7 @@ var formSubmitHandler = function (event) {
   
     if (searchStr) {
       console.log(searchStr);
+      getCityAPI(searchStr);
   
       searchInputEl.value = '';
     } else {
@@ -45,28 +54,48 @@ function seachHistoryButton() {
 
 function getCityAPI(str) {
 
-    let apiUrl = "";
+    let apiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+str+'&limit=5&appid=d94837374dd795af58b4fafcf7fe308f';
 
   fetch(apiUrl)
   .then((response) => response.json())
-  .then((data) => console.log(data));
-}
-
-// save varified city/coordinates locally as search history
-
-function saveSearchHistory (data) {
+  .then((data) => {
     
+    console.log(data);
+
+    city.name=data[0].name;
+    city.lat=data[0].lat;
+    city.lon=data[0].lon;
+
+    searchHistory.push(city);
+
+    console.log(city);
+    console.log(searchHistory);
+
+    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+
+    getWeatherAPI(city.lat.toFixed(2),city.lon.toFixed(2));
+  
+  });
 }
 
 //make API call for the given city and receive data
 
-function getWeatherAPI(str) {
+function getWeatherAPI(lat,lon) {
 
-    let apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
+    let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
+    // let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric'; // test link
 
   fetch(apiUrl)
   .then((response) => response.json())
-  .then((data) => console.log(data));
+  .then((data) => {
+    
+    console.log(lat,lon);
+    console.log(data);
+    
+    displayCurrentWeather(data);
+    displayForecast(data);
+
+  });
 }
 
 // process current forecast
@@ -75,13 +104,13 @@ function getWeatherAPI(str) {
 
 // display current forecast
 
-function displayCurrentWeather() {
+function displayCurrentWeather(data) {
 
 }
 
 // display 5 day forecast
 
-function displayForecast() {
+function displayForecast(data) {
 
 }
 
@@ -89,7 +118,7 @@ function displayForecast() {
 // display search history (if any)
 
 function displaySearchHistory (history) {
-
+    
 }
 
 // main code and listeners
