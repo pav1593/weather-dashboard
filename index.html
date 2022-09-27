@@ -21,26 +21,105 @@
         </div>
       </div>
 
-      <div class="container">
+      <div class="container my-3">
         <div class="row">
             <!-- left column search field and buttons -->
-          <div class="col">
+          <div class="col" >
                 <!-- search box and button -->
-                <div class="card">
+                <div class="card border-0">
                 
                   <form id="user-form" class="card-body">
-                    <input name="search" id="search" type="text" autofocus="true" class="form-input" placeholder="Toronto, Canada" />
+                    <input name="search" id="search" type="text" autofocus="true" class="form-input" size="50" placeholder="Toronto, Canada" />
                     <button type="submit" class="btn btn-primary">Search</button>
                   </form>
                 </div>
             <hr />
-            <div>
-                   <!-- quick search buttons -->
-            </div>
-
         </div>  
+        <section class="container my-3">
+          <!-- Use row class to create row in the container -->
+          <div class="row">
+            <!-- Use col-* classes for different column sizes on different screens -->
+            <div class="col-12 col-md-8 col-xl-9">
+              <h3 id="city-header">TEMP</h3><br/>
+              <p>Temp: </p><span id="temp-current"></span><br/>
+              <p>Wind: </p><span id="wind-current"></span><br/>
+              <p>Humidity: </p><span id="humidity-current"></span>
+              
+            </div>  
+           
+          </div>
+           <hr />
+        </section>
+
       
+        <section class="container">
+            <section class="row ">
+              <div class="col">
+                <section class="row">
+                  <div class="col">
+                    <div class="card bg-dark text-light">
+                      <div class="card-body">
+                        <h4 id="day1-date">TEMP DATE</h4>
+                        <h4 id="day1-icon"></h4>
+                        <p class="card-text">Temp: </p><span id="temp-day1"></span><br/>
+                        <p class="card-text">Wind: </p><span id="wind-day1"></span><br/>
+                        <p class="card-text">Humidity: </p><span id="humidity-day1"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card bg-dark text-light">
+                      <div class="card-body">
+                        <h4 id="day2-date">TEMP DATE</h4>
+                        <h4 id="day2-icon"></h4>
+                        <p class="card-text">Temp: </p><span id="temp-day2"></span><br/>
+                        <p class="card-text">Wind: </p><span id="wind-day2"></span><br/>
+                        <p class="card-text">Humidity: </p><span id="humidity-day2"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card bg-dark text-light">
+                      <div class="card-body">
+                        <h4 id="day3-date">TEMP DATE</h4>
+                        <h4 id="day3-icon"></h4>
+                        <p class="card-text">Temp: </p><span id="temp-day3"></span><br/>
+                        <p class="card-text">Wind: </p><span id="wind-day3"></span><br/>
+                        <p class="card-text">Humidity: </p><span id="humidity-day3"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card bg-dark text-light">
+                      <div class="card-body">
+                        <h4 id="day4-date">TEMP DATE</h4>
+                        <h4 id="day4-icon"></h4>
+                        <p class="card-text">Temp: </p><span id="temp-day4"></span><br/>
+                        <p class="card-text">Wind: </p><span id="wind-day4"></span><br/>
+                        <p class="card-text">Humidity: </p><span id="humidity-day4"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card bg-dark text-light">
+                      <div class="card-body">
+                        <h4 id="day5-date">TEMP DATE</h4>
+                        <h4 id="day5-icon"></h4>
+                        <p class="card-text">Temp: </p><span id="temp-day5"></span><br/>
+                        <p class="card-text">Wind: </p><span id="wind-day5"></span><br/>
+                        <p class="card-text">Humidity: </p><span id="humidity-day5"></span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              
+            </section>
+          </section>
+
       </div>
+
+
     </div>  
         <script src="./Assets/js/script.js"></script>
 </body>

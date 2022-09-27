@@ -35,13 +35,39 @@ var formSubmitHandler = function (event) {
 
 // get user input if search history city button is clicked
 
-// verify city input
+function seachHistoryButton() {
 
+}
+
+// verify city input
 // convert city input to coordinates
 
-// save varified city/coordinates locally
+
+function getCityAPI(str) {
+
+    let apiUrl = "";
+
+  fetch(apiUrl)
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+}
+
+// save varified city/coordinates locally as search history
+
+function saveSearchHistory (data) {
+    
+}
 
 //make API call for the given city and receive data
+
+function getWeatherAPI(str) {
+
+    let apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
+
+  fetch(apiUrl)
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+}
 
 // process current forecast
 
@@ -49,8 +75,24 @@ var formSubmitHandler = function (event) {
 
 // display current forecast
 
+function displayCurrentWeather() {
+
+}
+
 // display 5 day forecast
+
+function displayForecast() {
+
+}
+
 
 // display search history (if any)
 
+function displaySearchHistory (history) {
+
+}
+
+// main code and listeners
+
 searchFormEl.addEventListener('submit', formSubmitHandler);
+//historyButton.addEventListener('click',seachHistoryButton);
