@@ -104,7 +104,21 @@ function getWeatherAPI(lat,lon) {
 
 // display current forecast
 
+function reformatDate(date) {
+
+    let reformatDateStr = moment(date, "YYYY-MM-DD h:mm:ss").format("MM/DD/YYYY");
+
+  return reformatDateStr;
+}
+
 function displayCurrentWeather(data) {
+
+  $('#city-header').text(data.city.name +' ('+reformatDate(data.list[0].dt_txt)+') ');
+  $('#city-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[0].weather[0].icon+'.png');
+  $('#temp-current').text(data.list[0].main.temp);
+  $('#wind-current').text(data.list[0].wind.speed);
+  $('#humidity-current').text(data.list[0].main.humidity);
+
 
 }
 
@@ -112,13 +126,46 @@ function displayCurrentWeather(data) {
 
 function displayForecast(data) {
 
+
+
+  $('#day1-date').text(reformatDate(data.list[0].dt_txt));
+  $('#day1-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[0].weather[0].icon+'.png');
+  $('#temp-day1').text(data.list[0].main.temp);
+  $('#wind-day1').text(data.list[0].wind.speed);
+  $('#humidity-day1').text(data.list[0].main.humidity);
+ 
+  $('#day2-date').text(reformatDate(data.list[11].dt_txt));
+  $('#day2-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[11].weather[0].icon+'.png');
+  $('#temp-day2').text(data.list[11].main.temp);
+  $('#wind-day2').text(data.list[11].wind.speed);
+  $('#humidity-day2').text(data.list[11].main.humidity);
+
+  $('#day3-date').text(reformatDate(data.list[19].dt_txt));
+  $('#day3-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[19].weather[0].icon+'.png');
+  $('#temp-day3').text(data.list[19].main.temp);
+  $('#wind-day3').text(data.list[19].wind.speed);
+  $('#humidity-day3').text(data.list[19].main.humidity);
+
+  $('#day4-date').text(reformatDate(data.list[27].dt_txt));
+  $('#day4-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[27].weather[0].icon+'.png');
+  $('#temp-day4').text(data.list[27].main.temp);
+  $('#wind-day4').text(data.list[27].wind.speed);
+  $('#humidity-day4').text(data.list[27].main.humidity);
+
+  $('#day5-date').text(reformatDate(data.list[35].dt_txt));
+  $('#day5-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[35].weather[0].icon+'.png');
+  $('#temp-day5').text(data.list[35].main.temp);
+  $('#wind-day5').text(data.list[35].wind.speed);
+  $('#humidity-day5').text(data.list[35].main.humidity);
+
+      
 }
 
 
 // display search history (if any)
 
 function displaySearchHistory (history) {
-    
+
 }
 
 // main code and listeners
