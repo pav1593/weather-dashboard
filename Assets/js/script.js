@@ -33,7 +33,7 @@ var formSubmitHandler = function (event) {
     var searchStr = searchInputEl.value.trim();
   
     if (searchStr) {
-      console.log(searchStr);
+     
       getCityAPI(searchStr);
   
       searchInputEl.value = '';
@@ -44,8 +44,9 @@ var formSubmitHandler = function (event) {
 
 // get user input if search history city button is clicked
 
-function seachHistoryButton() {
-
+function seachHistoryButton(event) {
+    let item = event.target;
+    $(item).name;
 }
 
 // verify city input
@@ -60,40 +61,46 @@ function getCityAPI(str) {
   .then((response) => response.json())
   .then((data) => {
     
-    console.log(data);
 
     city.name=data[0].name;
     city.lat=data[0].lat;
     city.lon=data[0].lon;
 
-    searchHistory.push(city);
 
-    console.log(city);
-    console.log(searchHistory);
+    let history = JSON.parse(localStorage.getItem("searchHistory"));
+
+    if (history !== null) {
+          searchHistory=history;
+      }
+
+    searchHistory.push(city);
 
     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 
-    getWeatherAPI(city.lat.toFixed(2),city.lon.toFixed(2));
+    getWeatherAPI("",city.lat.toFixed(2),city.lon.toFixed(2));
   
   });
 }
 
 //make API call for the given city and receive data
 
-function getWeatherAPI(lat,lon) {
-
-    let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
-    // let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric'; // test link
+function getWeatherAPI(str,lat,lon) {
+  let apiUrl="";
+  
+  if (str==="") {
+    apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
+    //let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric'; // test link
+  } else {
+      apiUrl = str;      
+  }
 
   fetch(apiUrl)
   .then((response) => response.json())
   .then((data) => {
     
-    console.log(lat,lon);
-    console.log(data);
-    
-    displayCurrentWeather(data);
-    displayForecast(data);
+  displayCurrentWeather(data);
+  displayForecast(data);
+  displaySearchHistory();
 
   });
 }
@@ -126,8 +133,6 @@ function displayCurrentWeather(data) {
 
 function displayForecast(data) {
 
-
-
   $('#day1-date').text(reformatDate(data.list[0].dt_txt));
   $('#day1-icon').attr('src', 'http://openweathermap.org/img/w/'+data.list[0].weather[0].icon+'.png');
   $('#temp-day1').text(data.list[0].main.temp);
@@ -157,18 +162,56 @@ function displayForecast(data) {
   $('#temp-day5').text(data.list[35].main.temp);
   $('#wind-day5').text(data.list[35].wind.speed);
   $('#humidity-day5').text(data.list[35].main.humidity);
-
       
 }
 
 
+// retrieve search history if any
+
+function retrieveSearchHistory() {
+
+  
+  let history = JSON.parse(localStorage.getItem("searchHistory"));
+
+  if (history !== null) {
+        return history;
+    }
+  }
+
+
 // display search history (if any)
 
-function displaySearchHistory (history) {
+function displaySearchHistory() {
+
+  $('#searchHistory').text('');
+  
+  let history = JSON.parse(localStorage.getItem("searchHistory"));
+
+  if (history !== null) {
+  
+    for (let i=0;i<history.length;i++) {
+    
+          var buttonEl = $('<button>');
+          buttonEl.addClass("btn btn-primary mr-1");
+          buttonEl.attr('type','submit');
+          buttonEl.attr('id','button');
+          buttonEl.text(history[i].name);
+          $('#searchHistory').append(buttonEl);
+
+    }
+  }
 
 }
 
 // main code and listeners
 
 searchFormEl.addEventListener('submit', formSubmitHandler);
-//historyButton.addEventListener('click',seachHistoryButton);
+$('#searchHistory').on('click','#button',seachHistoryButton);
+
+function main() {
+  let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
+  displaySearchHistory();
+  getWeatherAPI(apiUrl,0,0);
+}
+
+main();
