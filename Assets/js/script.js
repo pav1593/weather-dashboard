@@ -57,7 +57,7 @@ function searchHistoryButton(event) {
             lon=history[i].lon;
         } 
     }
-
+    searchInputEl.value = '';
     getWeatherAPI("",lat.toFixed(2),lon.toFixed(2));
     
 }
