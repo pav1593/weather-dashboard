@@ -65,7 +65,7 @@ function searchHistoryButton(event) {
 // convert city input to coordinates
 function getCityAPI(str) {
 
-    let apiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+str+'&limit=5&appid=d94837374dd795af58b4fafcf7fe308f';
+    let apiUrl = 'https://api.openweathermap.org/geo/1.0/direct?q='+str+'&limit=5&appid=d94837374dd795af58b4fafcf7fe308f';
 
   fetch(apiUrl)
   .then((response) => response.json())
