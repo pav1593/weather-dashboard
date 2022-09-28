@@ -44,9 +44,23 @@ var formSubmitHandler = function (event) {
 
 // get user input if search history city button is clicked
 
-function seachHistoryButton(event) {
+function searchHistoryButton(event) {
     let item = event.target;
-    $(item).name;
+    let history = JSON.parse(localStorage.getItem("searchHistory"));
+    let lat=0;
+    let lon=0;
+
+    console.log($(item).text());
+    for(let i=0;i<history.length;i++) {
+        if (history[i].name===$(item).text()) {
+            lat=history[i].lat;
+            lon=history[i].lon;
+            console.log(history[i].name,lat,lon);
+        } 
+    }
+
+    getWeatherAPI("",lat.toFixed(2),lon.toFixed(2));
+    
 }
 
 // verify city input
@@ -61,11 +75,9 @@ function getCityAPI(str) {
   .then((response) => response.json())
   .then((data) => {
     
-
     city.name=data[0].name;
     city.lat=data[0].lat;
     city.lon=data[0].lon;
-
 
     let history = JSON.parse(localStorage.getItem("searchHistory"));
 
@@ -73,9 +85,11 @@ function getCityAPI(str) {
           searchHistory=history;
       }
 
-    searchHistory.push(city);
+    if (!checkSearchHistory(city.name)) {
 
-    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+      searchHistory.push(city);
+      localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+    }
 
     getWeatherAPI("",city.lat.toFixed(2),city.lon.toFixed(2));
   
@@ -85,7 +99,6 @@ function getCityAPI(str) {
 //make API call for the given city and receive data
 
 function getWeatherAPI(str,lat,lon) {
-  let apiUrl="";
   
   if (str==="") {
     apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
@@ -168,15 +181,23 @@ function displayForecast(data) {
 
 // retrieve search history if any
 
-function retrieveSearchHistory() {
+function checkSearchHistory(str) {
 
-  
+  let isIncluded = false;
+
   let history = JSON.parse(localStorage.getItem("searchHistory"));
 
   if (history !== null) {
-        return history;
+
+    for (let i=0;i<history.length;i++) {
+        if(history[i].name===str) {
+              isIncluded = !isIncluded;
+              return isIncluded;
+        }
     }
   }
+  return isIncluded;
+}
 
 
 // display search history (if any)
@@ -206,12 +227,12 @@ function displaySearchHistory() {
 // main code and listeners
 
 searchFormEl.addEventListener('submit', formSubmitHandler);
-$('#searchHistory').on('click','#button',seachHistoryButton);
+$('#searchHistory').on('click','#button',searchHistoryButton);
 
 function main() {
-  let apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
+  let defaultUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
   displaySearchHistory();
-  getWeatherAPI(apiUrl,0,0);
+  getWeatherAPI(defaultUrl,0,0);
 }
 
 main();
