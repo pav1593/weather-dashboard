@@ -18,6 +18,7 @@ var repoSearchTerm = document.querySelector('#repo-search-term');
 
 var searchHistory = [];
 
+// declare city object to store city attribs
 var city = {
 
     name: "",
@@ -42,7 +43,7 @@ var formSubmitHandler = function (event) {
     }
   };
 
-// get user input if search history city button is clicked
+// get user input if search history city button is clicked and fetch the weather data for item in history
 
 function searchHistoryButton(event) {
     let item = event.target;
@@ -50,12 +51,10 @@ function searchHistoryButton(event) {
     let lat=0;
     let lon=0;
 
-    console.log($(item).text());
     for(let i=0;i<history.length;i++) {
         if (history[i].name===$(item).text()) {
             lat=history[i].lat;
             lon=history[i].lon;
-            console.log(history[i].name,lat,lon);
         } 
     }
 
@@ -63,10 +62,7 @@ function searchHistoryButton(event) {
     
 }
 
-// verify city input
 // convert city input to coordinates
-
-
 function getCityAPI(str) {
 
     let apiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+str+'&limit=5&appid=d94837374dd795af58b4fafcf7fe308f';
@@ -75,16 +71,22 @@ function getCityAPI(str) {
   .then((response) => response.json())
   .then((data) => {
     
+    if (data===null) {
+        alert('City not found. Please try again.');
+        return;
+    }
+    //populate the city object with info if data payload received
     city.name=data[0].name;
     city.lat=data[0].lat;
     city.lon=data[0].lon;
 
+    // check to see if there's any seach history, if so then copy over that history prior to adding new items
     let history = JSON.parse(localStorage.getItem("searchHistory"));
-
     if (history !== null) {
           searchHistory=history;
       }
 
+    // check that city search is not already in search history before making a geolocation API call and don't double-count into search history
     if (!checkSearchHistory(city.name)) {
 
       searchHistory.push(city);
@@ -93,6 +95,8 @@ function getCityAPI(str) {
 
     getWeatherAPI("",city.lat.toFixed(2),city.lon.toFixed(2));
   
+  }).catch((error) => {
+    alert('There was an error looking up the city name. Please try again. Error: ',error);
   });
 }
 
@@ -111,19 +115,23 @@ function getWeatherAPI(str,lat,lon) {
   .then((response) => response.json())
   .then((data) => {
     
-  displayCurrentWeather(data);
-  displayForecast(data);
-  displaySearchHistory();
+    if (data===null) {
+      alert('Weather data not found. Please try again.');
+      return;
+  }
 
+    displayCurrentWeather(data);
+    displayForecast(data);
+    displaySearchHistory();
+
+  }).catch((error) => {
+    alert('There was an error retreiving weather information. Please try again. Error: ',error);
   });
 }
 
-// process current forecast
 
-// process 5 day forecast
 
-// display current forecast
-
+// this function uses moment() api to reformat the time for display
 function reformatDate(date) {
 
     let reformatDateStr = moment(date, "YYYY-MM-DD h:mm:ss").format("MM/DD/YYYY");
@@ -131,6 +139,7 @@ function reformatDate(date) {
   return reformatDateStr;
 }
 
+// display current forecast
 function displayCurrentWeather(data) {
 
   $('#city-header').text(data.city.name +' ('+reformatDate(data.list[0].dt_txt)+') ');
@@ -179,7 +188,7 @@ function displayForecast(data) {
 }
 
 
-// retrieve search history if any
+// check if there's a duplicate entry in the search history
 
 function checkSearchHistory(str) {
 
@@ -230,6 +239,7 @@ searchFormEl.addEventListener('submit', formSubmitHandler);
 $('#searchHistory').on('click','#button',searchHistoryButton);
 
 function main() {
+  // displays Toronto weather as the default
   let defaultUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=43.65&lon=-79.38&appid=d94837374dd795af58b4fafcf7fe308f&units=metric';
   displaySearchHistory();
   getWeatherAPI(defaultUrl,0,0);
